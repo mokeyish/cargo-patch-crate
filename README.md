@@ -1,5 +1,7 @@
 ## Patch-Crate
 
+[![](https://img.shields.io/crates/v/patch-crate.svg)](https://crates.io/crates/patch-crate)
+
 patch-crate lets rust app developer instantly make and keep fixes to rust crate dependencies.
 It's a vital band-aid for those of us living on the bleeding edge.
 
@@ -14,6 +16,8 @@ cargo patch-crate some-crate
 git add patches/some-crate+3.14.15.patch
 git commit -m "fix broken_file.rs in some-crate"
 ```
+
+Checkout our example at [here](https://github.com/mokeyish/cargo-patch-crate-example).
 
 ## Get started
 
