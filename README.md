@@ -74,6 +74,20 @@ Checkout our example at [here](https://github.com/mokeyish/cargo-patch-crate-exa
    patch-crate = "0.1"
    ```
 
+## Command explanation
+
+- `cargo patch-crate`
+   
+   Apply patch files in `./patches` to `./target/patch/crate-xxx` if it not exist.
+
+- `cargo patch-crate --force`
+
+   Clean up `./target/patch/` and apply patch files in `./patches` to `./target/patch/crate-xxx`.
+
+- `crate patch-crate <crate name1> <crate name2> ...`
+
+   Create patch file of specific crate from `./target/patch/crate-xxx` and save to `./patches`
+
 
 ## Credits
 
