@@ -1,0 +1,30 @@
+[package]
+name = "patch-crate"
+version = "0.1.0"
+authors = ["YISH <mokeyish@hotmail.com>"]
+edition = "2021"
+
+license = "MIT"
+repository = "https://github.com/mokeyish/patch-crate"
+
+keywords = ["cargo", "patch", "dependency", "dependencies", "patchfile"]
+categories = ["command-line-utilities"]
+
+description = """
+patch-crate lets rust developer instantly make and keep fixes to rust crate dependencies. 
+It's a vital band-aid for those of us living on the bleeding edge.
+"""
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package.metadata.patch]
+# crates = ["clap", "fs_extra"]
+
+
+
+[dependencies]
+paris = { version = "1.5", features = ["macros"] }
+anyhow = "1"
+cargo = "0.72"
+fs_extra = "1"
+clap = { version = "4.4.7", features = ["derive"]}
