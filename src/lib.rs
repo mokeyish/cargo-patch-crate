@@ -174,7 +174,13 @@ fn find_cargo_toml(path: &Path) -> Result<PathBuf> {
 }
 
 pub fn run() -> anyhow::Result<()> {
-    let args = Cli::parse();
+    let args = {
+        let mut args = Cli::parse();
+        if let Some(idx) = args.crates.iter().position(|c| c == "patch-crate") {
+            args.crates.remove(idx);
+        }
+        args
+    };
 
     let config = Config::default()?;
     let _lock = config.acquire_package_cache_lock()?;
