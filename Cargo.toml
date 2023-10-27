@@ -1,11 +1,11 @@
 [package]
 name = "patch-crate"
-version = "0.1.2"
+version = "0.1.5"
 authors = ["YISH <mokeyish@hotmail.com>"]
 edition = "2021"
 
 license = "MIT"
-repository = "https://github.com/mokeyish/patch-crate"
+repository = "https://github.com/mokeyish/cargo-patch-crate"
 
 keywords = ["cargo", "patch", "dependency", "dependencies", "patchfile"]
 categories = ["command-line-utilities"]

@@ -198,6 +198,9 @@ pub fn run() -> anyhow::Result<()> {
 
     if !args.crates.is_empty() {
         info!("starting patch creation.");
+        if !patches_folder.exists() {
+            fs::create_dir_all(&patches_folder)?;
+        }
         for n in args.crates.iter() {
             // make patch
             info!("crate: {}, starting patch creation.", n);
@@ -251,47 +254,48 @@ pub fn run() -> anyhow::Result<()> {
             workspace.clean_patch_folder()?;
         }
 
-        for entry in fs::read_dir(patches_folder)? {
-            let entry = entry?;
-            if entry.metadata()?.is_file()
-                && entry.path().extension() == Some(OsStr::new(PATCH_EXT))
-            {
-                let patch_file = entry.path();
-                let filename = patch_file
-                    .file_stem()
-                    .and_then(|s| s.to_str())
-                    .ok_or(anyhow!("Patch file does not have a name"))?;
+        if patches_folder.exists() {
+            for entry in fs::read_dir(patches_folder)? {
+                let entry = entry?;
+                if entry.metadata()?.is_file()
+                    && entry.path().extension() == Some(OsStr::new(PATCH_EXT))
+                {
+                    let patch_file = entry.path();
+                    let filename = patch_file
+                        .file_stem()
+                        .and_then(|s| s.to_str())
+                        .ok_or(anyhow!("Patch file does not have a name"))?;
 
-                if let Some((pkg_name, _version)) = filename.split_once('+') {
-                    let pkg_id = resolve.query(pkg_name)?;
-                    let pkg = pkg_set.get_one(pkg_id)?;
-                    if !crates_to_patch.contains(&pkg) {
-                        warn!(
-                            "crate: {}, {} is not in Cargo.toml. Did you forget to add it?",
-                            pkg_name, pkg_name
-                        );
-                        continue;
-                    }
+                    if let Some((pkg_name, _version)) = filename.split_once('+') {
+                        let pkg_id = resolve.query(pkg_name)?;
+                        let pkg = pkg_set.get_one(pkg_id)?;
+                        if !crates_to_patch.contains(&pkg) {
+                            warn!(
+                                "crate: {}, {} is not in Cargo.toml. Did you forget to add it?",
+                                pkg_name, pkg_name
+                            );
+                            continue;
+                        }
 
-                    let patch_target_path = pkg.patch_target_path(&workspace)?;
-                    if !patch_target_path.exists() {
-                        copy_package(pkg, &patch_target_folder, args.force)?;
-                        info!("crate: {}, applying patch started.", pkg_name);
-                        git::init(&patch_target_path)?;
-                        git::apply(&patch_target_path, &patch_file)?;
-                        git::destroy(&patch_target_path)?;
-                        info!(
-                            "crate: {}, successfully applied patch {:?}.",
-                            pkg_name, patch_file
-                        );
-                    } else {
-                        info!("crate: {}, skip applying patch, {:?} already exists. Did you forget to add `--force`?", pkg_name, patch_target_path);
+                        let patch_target_path = pkg.patch_target_path(&workspace)?;
+                        if !patch_target_path.exists() {
+                            copy_package(pkg, &patch_target_folder, args.force)?;
+                            info!("crate: {}, applying patch started.", pkg_name);
+                            git::init(&patch_target_path)?;
+                            git::apply(&patch_target_path, &patch_file)?;
+                            git::destroy(&patch_target_path)?;
+                            info!(
+                                "crate: {}, successfully applied patch {:?}.",
+                                pkg_name, patch_file
+                            );
+                        } else {
+                            info!("crate: {}, skip applying patch, {:?} already exists. Did you forget to add `--force`?", pkg_name, patch_target_path);
+                        }
+                        crates_to_patch.remove(pkg);
                     }
-                    crates_to_patch.remove(pkg);
                 }
             }
         }
-
         for pkg in crates_to_patch {
             copy_package(pkg, &patch_target_folder, args.force)?;
         }
