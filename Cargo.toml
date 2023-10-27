@@ -1,6 +1,6 @@
 [package]
 name = "patch-crate"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["YISH <mokeyish@hotmail.com>"]
 edition = "2021"
 
@@ -10,10 +10,15 @@ repository = "https://github.com/mokeyish/patch-crate"
 keywords = ["cargo", "patch", "dependency", "dependencies", "patchfile"]
 categories = ["command-line-utilities"]
 
+
 description = """
 patch-crate lets rust developer instantly make and keep fixes to rust crate dependencies. 
 It's a vital band-aid for those of us living on the bleeding edge.
 """
+
+[[bin]]
+name = "cargo-patch-crate"
+path = "src/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
