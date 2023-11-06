@@ -343,9 +343,14 @@ mod git {
         Ok(())
     }
     pub fn create_patch(repo_dir: &Path, patch_file: &Path) -> anyhow::Result<()> {
+        Command::new("git")
+            .current_dir(repo_dir)
+            .args(["add", "."])
+            .output()?;
+
         let out = Command::new("git")
             .current_dir(repo_dir)
-            .args([OsStr::new("diff")])
+            .args([OsStr::new("diff"), OsStr::new("--staged")])
             .output()?;
 
         if out.status.success() {
