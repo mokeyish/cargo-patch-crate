@@ -271,7 +271,7 @@ pub fn run() -> anyhow::Result<()> {
                         let pkg = pkg_set.get_one(pkg_id)?;
                         if !crates_to_patch.contains(&pkg) {
                             warn!(
-                                "crate: {}, {} is not in Cargo.toml. Did you forget to add it?",
+                                "crate: {}, {} is not in the [package.metadata.patch] section of Cargo.toml. Did you forget to add it?",
                                 pkg_name, pkg_name
                             );
                             continue;
