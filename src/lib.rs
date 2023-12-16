@@ -121,7 +121,10 @@ impl WorkspaceExt for Workspace<'_> {
     }
 
     fn clean_patch_folder(&self) -> Result<()> {
-        fs::remove_dir_all(self.patch_target_folder())?;
+        let path = self.patch_target_folder();
+        if path.exists() {
+            fs::remove_dir_all(self.patch_target_folder())?;
+        }
         Ok(())
     }
 }
@@ -329,10 +332,29 @@ mod git {
     }
 
     pub fn apply(repo_dir: &Path, patch_file: &Path) -> anyhow::Result<()> {
-        Command::new("git")
+        #[cfg(target_os = "windows")]
+        let patch_file = patch_file
+            .to_string_lossy()
+            .to_string()
+            .trim_start_matches(r#"\\?\"#)
+            .to_string();
+        #[cfg(not(target_os = "windows"))]
+        let patch_file = patch_file.to_string_lossy().to_string();
+
+        let out = Command::new("git")
             .current_dir(repo_dir)
-            .args([OsStr::new("apply"), OsStr::new(patch_file)])
+            .args([
+                "apply",
+                "--ignore-space-change",
+                "--ignore-whitespace",
+                "--whitespace=nowarn",
+                &patch_file,
+            ])
             .output()?;
+
+        if !out.status.success() {
+            anyhow::bail!(String::from_utf8(out.stderr)?)
+        }
         Ok(())
     }
     pub fn destroy(repo_dir: &Path) -> anyhow::Result<()> {

@@ -4,61 +4,63 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug executable 'patch-crate'",
-      "cargo": {
-        "args": [
-          "build",
-          "--bin=patch-crate",
-          "--package=patch-crate"
-        ],
-        "filter": {
-          "name": "patch-crate",
-          "kind": "bin"
-        }
+      {
+          "type": "lldb",
+          "request": "launch",
+          "name": "Debug executable 'cargo-patch-crate'",
+          "cargo": {
+              "args": [
+                  "build",
+                  "--bin=cargo-patch-crate",
+                  "--package=patch-crate"
+              ],
+              "filter": {
+                  "name": "cargo-patch-crate",
+                  "kind": "bin"
+              }
+          },
+          "args": [
+              "--force"
+          ],
+          "cwd": "${workspaceFolder}"
       },
-      "args": [],
-      "cwd": "${workspaceFolder}"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug unit tests in library 'patch-crate'",
-      "cargo": {
-        "args": [
-          "test",
-          "--no-run",
-          "--lib",
-          "--package=patch-crate"
-        ],
-        "filter": {
-          "name": "patch-crate",
-          "kind": "lib"
-        }
+      {
+          "type": "lldb",
+          "request": "launch",
+          "name": "Debug unit tests in library 'patch-crate'",
+          "cargo": {
+              "args": [
+                  "test",
+                  "--no-run",
+                  "--lib",
+                  "--package=patch-crate"
+              ],
+              "filter": {
+                  "name": "patch-crate",
+                  "kind": "lib"
+              }
+          },
+          "args": [],
+          "cwd": "${workspaceFolder}"
       },
-      "args": [],
-      "cwd": "${workspaceFolder}"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug unit tests in executable 'patch-crate'",
-      "cargo": {
-        "args": [
-          "test",
-          "--no-run",
-          "--bin=patch-crate",
-          "--package=patch-crate"
-        ],
-        "filter": {
-          "name": "patch-crate",
-          "kind": "bin"
-        }
-      },
-      "args": [],
-      "cwd": "${workspaceFolder}"
-    }
+      {
+          "type": "lldb",
+          "request": "launch",
+          "name": "Debug unit tests in executable 'cargo-patch-crate'",
+          "cargo": {
+              "args": [
+                  "test",
+                  "--no-run",
+                  "--bin=cargo-patch-crate",
+                  "--package=patch-crate"
+              ],
+              "filter": {
+                  "name": "cargo-patch-crate",
+                  "kind": "bin"
+              }
+          },
+          "args": [],
+          "cwd": "${workspaceFolder}"
+      }
   ]
 }
