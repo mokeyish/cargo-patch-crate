@@ -59,7 +59,7 @@ use cargo::{
         Resolve, Workspace,
     },
     ops::{get_resolved_packages, load_pkg_lockfile, resolve_with_previous},
-    util::{config::Config, important_paths::find_root_manifest_for_wd},
+    util::{cache_lock::CacheLockMode, important_paths::find_root_manifest_for_wd, GlobalContext},
 };
 use clap::Parser;
 use fs_extra::dir::{copy, CopyOptions};
@@ -130,7 +130,7 @@ impl WorkspaceExt for Workspace<'_> {
 }
 
 fn resolve_ws<'a>(ws: &Workspace<'a>) -> Result<(PackageSet<'a>, Resolve)> {
-    let mut registry = PackageRegistry::new(ws.config())?;
+    let mut registry = PackageRegistry::new(ws.gctx())?;
     registry.lock_patches();
     let resolve = {
         let prev = load_pkg_lockfile(ws)?;
@@ -185,12 +185,12 @@ pub fn run() -> anyhow::Result<()> {
         args
     };
 
-    let config = Config::default()?;
-    let _lock = config.acquire_package_cache_lock()?;
+    let gctx = GlobalContext::default()?;
+    let _lock = gctx.acquire_package_cache_lock(CacheLockMode::Shared)?;
 
     let cargo_toml_path = find_cargo_toml(&PathBuf::from("."))?;
 
-    let workspace = Workspace::new(&cargo_toml_path, &config)?;
+    let workspace = Workspace::new(&cargo_toml_path, &gctx)?;
 
     let patches_folder = workspace.patches_folder();
 
