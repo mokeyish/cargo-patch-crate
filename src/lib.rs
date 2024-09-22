@@ -269,8 +269,8 @@ pub fn run() -> anyhow::Result<()> {
                         .and_then(|s| s.to_str())
                         .ok_or(anyhow!("Patch file does not have a name"))?;
 
-                    if let Some((pkg_name, _version)) = filename.split_once('+') {
-                        let pkg_id = resolve.query(pkg_name)?;
+                    if let Some((pkg_name, version)) = filename.split_once('+') {
+                        let pkg_id = resolve.query(format!("{}@{}", pkg_name, version).as_str())?;
                         let pkg = pkg_set.get_one(pkg_id)?;
                         if !crates_to_patch.contains(&pkg) {
                             warn!(
