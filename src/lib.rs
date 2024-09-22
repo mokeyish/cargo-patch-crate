@@ -59,6 +59,7 @@ use cargo::{
         Resolve, Workspace,
     },
     ops::{get_resolved_packages, load_pkg_lockfile, resolve_with_previous},
+    sources::SourceConfigMap,
     util::{cache_lock::CacheLockMode, important_paths::find_root_manifest_for_wd, GlobalContext},
 };
 use clap::Parser;
@@ -130,7 +131,8 @@ impl WorkspaceExt for Workspace<'_> {
 }
 
 fn resolve_ws<'a>(ws: &Workspace<'a>) -> Result<(PackageSet<'a>, Resolve)> {
-    let mut registry = PackageRegistry::new(ws.gctx())?;
+    let mut registry =
+        PackageRegistry::new_with_source_config(ws.gctx(), SourceConfigMap::new(ws.gctx())?)?;
     registry.lock_patches();
     let resolve = {
         let prev = load_pkg_lockfile(ws)?;
