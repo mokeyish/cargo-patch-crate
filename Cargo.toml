@@ -1,6 +1,6 @@
 [package]
 name = "patch-crate"
-version = "0.1.10"
+version = "0.1.11"
 authors = ["YISH <mokeyish@hotmail.com>"]
 edition = "2021"
 
