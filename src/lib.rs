@@ -28,7 +28,7 @@
 //!
 //! will download the sede package specified in the
 //! dpendency section to the `target/patch` folder.
-//!  
+//!
 //! Then override the dependency using
 //! `replace` like this
 //!
@@ -211,23 +211,34 @@ pub fn run() -> anyhow::Result<()> {
             info!("crate: {}, starting patch creation.", n);
             let pkg_id = resolve.query(n)?;
             let pkg = pkg_set.get_one(pkg_id)?;
-            let patch_target_path = pkg.patch_target_path(&workspace)?;
-            let patch_target_tmp_path = copy_package(pkg, &patch_target_tmp_folder, true)?;
-            git::init(&patch_target_tmp_path)?;
-            git::destroy(&patch_target_path)?;
+            let patched_crate_path = pkg.patch_target_path(&workspace)?;
+
+            // clone the original crate to a temporary folder
+            let original_crate_path = copy_package(pkg, &patch_target_tmp_folder, true)?;
+            git::init(&original_crate_path)?;
+
+            let original_crate_git_path = original_crate_path.join(".git");
+            let patched_crate_git_path = patched_crate_path.join(".git");
+
+            // destroy the .git folder in the patched crate, and copy the .git folder from the original crate
+            // for diffing
+            git::destroy(&patched_crate_path)?;
             copy(
-                &patch_target_path,
-                &patch_target_tmp_folder,
+                &original_crate_git_path,
+                &patched_crate_git_path,
                 &CopyOptions::new().overwrite(true).copy_inside(true),
             )?;
+
             let patch_file = patches_folder.join(format!(
                 "{}+{}.{}",
                 pkg_id.name(),
                 pkg_id.version(),
                 PATCH_EXT
             ));
-            git::create_patch(&patch_target_tmp_path, &patch_file)?;
+            git::create_patch(&patched_crate_path, &patch_file)?;
             fs::remove_dir_all(&patch_target_tmp_folder)?;
+
+            git::destroy(&patched_crate_path)?;
             info!("crate: {}, create patch successfully, {:?}", n, &patch_file);
         }
     } else {
