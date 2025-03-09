@@ -2,7 +2,7 @@
 name = "patch-crate"
 version = "0.1.12"
 authors = ["YISH <mokeyish@hotmail.com>"]
-edition = "2021"
+edition = "2024"
 
 license = "MIT"
 repository = "https://github.com/mokeyish/cargo-patch-crate"
@@ -26,10 +26,9 @@ path = "src/main.rs"
 # crates = ["clap", "fs_extra"]
 
 
-
 [dependencies]
 paris = { version = "1.5", features = ["macros"] }
 anyhow = "1"
-cargo = "0.82"
+cargo = "0.86"
 fs_extra = "1"
-clap = { version = "4.4.7", features = ["derive"]}
+clap = { version = "4.5.31", features = ["derive"] }
