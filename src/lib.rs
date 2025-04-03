@@ -361,7 +361,6 @@ mod git {
                 "--ignore-space-change",
                 "--ignore-whitespace",
                 "--whitespace=nowarn",
-                "--allow-empty",
                 &patch_file,
             ])
             .output()?;
