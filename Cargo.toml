@@ -1,6 +1,6 @@
 [package]
 name = "patch-crate"
-version = "0.1.12"
+version = "0.1.13"
 authors = ["YISH <mokeyish@hotmail.com>"]
 edition = "2024"
 
@@ -12,7 +12,7 @@ categories = ["command-line-utilities"]
 
 
 description = """
-patch-crate lets rust developer instantly make and keep fixes to rust crate dependencies. 
+patch-crate lets rust developer instantly make and keep fixes to rust crate dependencies.
 It's a vital band-aid for those of us living on the bleeding edge.
 """
 
