@@ -385,7 +385,7 @@ mod git {
 
         let out = Command::new("git")
             .current_dir(repo_dir)
-            .args([OsStr::new("diff"), OsStr::new("--staged")])
+            .args([OsStr::new("diff"), OsStr::new("--staged"), OsStr::new("--no-ext-diff")])
             .output()?;
 
         if out.status.success() {
